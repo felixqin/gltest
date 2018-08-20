@@ -29,15 +29,8 @@ private:
     QOpenGLShaderProgram* mProgram;
     QOpenGLShader* mVShader;  //顶点着色器程序对象
     QOpenGLShader* mFShader;  //片段着色器对象
-    QOpenGLTexture* mTextureY;  //y纹理对象
-    QOpenGLTexture* mTextureU;  //u纹理对象
-    QOpenGLTexture* mTextureV;  //v纹理对象
-    GLint                 mTextureUniformY;
-    GLint                 mTextureUniformU;
-    GLint                 mTextureUniformV;
-    GLuint                mIdY;         // Texture id
-    GLuint                mIdU;         // Texture id
-    GLuint                mIdV;         // Texture id
+    GLint   mPositionLocation;
+    GLint   mColorLocation;
 };
 
 
