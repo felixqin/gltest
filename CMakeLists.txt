@@ -9,7 +9,7 @@ PROJECT(gltest)
 
 
 if (${CMAKE_SYSTEM_NAME} MATCHES Windows)
-    include(${PLATFORMDIR}/windows.cmake)
+    include(${PLATFORMDIR}/mingw32.cmake)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES Linux)
     include(${PLATFORMDIR}/linux.cmake)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES Darwin)
