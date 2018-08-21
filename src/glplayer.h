@@ -18,19 +18,24 @@ public:
 protected:
     void initializeGL();
     void paintGL();
-    void resizeGL(int w, int h);
 
 private:
+    void initImage();
     void initShaders();
 
 private:
-    bool         mGLInitialized;
+    bool  mGLInitialized;
 
     QOpenGLShaderProgram* mProgram;
     QOpenGLShader* mVShader;  //顶点着色器程序对象
     QOpenGLShader* mFShader;  //片段着色器对象
-    GLint   mPositionLocation;
-    GLint   mColorLocation;
+    QOpenGLTexture* mTexture;
+    GLint mIdTexture;
+    GLint mTextureLocation;
+
+    int   mWidth;
+    int   mHeight;
+    char* mImage;
 };
 
 
