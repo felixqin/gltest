@@ -14,9 +14,8 @@ CGLPlayer::CGLPlayer(QWidget* parent, Qt::WindowFlags f)
     , mProgram(NULL)
     , mVShader(NULL)
     , mFShader(NULL)
-    , mTexture(NULL)
-    , mIdTexture(0)
     , mTextureLocation(0)
+    , mIdTexture(0)
     , mWidth(640)
     , mHeight(360)
     , mImage(NULL)
@@ -29,7 +28,6 @@ CGLPlayer::~CGLPlayer()
     free(mImage);
 
     makeCurrent();
-    delete mTexture;
     delete mVShader;
     delete mFShader;
     delete mProgram;
@@ -108,8 +106,8 @@ void CGLPlayer::initShaders()
     mProgram->link();
     mProgram->bind();
 
-    GLuint vetexInLocation = mProgram->attributeLocation("vertexIn");
-    GLuint textureInLocation = mProgram->attributeLocation("textureIn");
+    GLint vetexInLocation = mProgram->attributeLocation("vertexIn");
+    GLint textureInLocation = mProgram->attributeLocation("textureIn");
     mTextureLocation = mProgram->uniformLocation("rgb");
 
     static const GLfloat vertexVertices[] = {
@@ -132,10 +130,12 @@ void CGLPlayer::initShaders()
     glVertexAttribPointer(textureInLocation, 2, GL_FLOAT, false, 0, textureVertices);
     glEnableVertexAttribArray(textureInLocation);
 
-    mTexture = new QOpenGLTexture(QOpenGLTexture::Target2D);
-    mTexture->create();
-    //获取纹理索引值
-    mIdTexture = mTexture->textureId();
+    glGenTextures(1, &mIdTexture);
+    glBindTexture(GL_TEXTURE_2D, mIdTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
 void CGLPlayer::paintGL()
@@ -152,10 +152,6 @@ void CGLPlayer::paintGL()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mIdTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mWidth, mHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, mImage);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     glUniform1i(mTextureLocation, 0);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
